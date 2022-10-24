@@ -18,12 +18,6 @@ jobs:
       
     - name: Publish .NET Core Project
       run: dotnet publish BlazorApp1/BlazorApp1.csproj -c Release --output release --nologo
-      
-    - name: Uploading files to gh-pages branch
-      uses: JamesIves/github-pages-deploy-action@4.1.4
-      with:
-        branch: gh-pages
-        folder: release/wwwroot
 
     - name: Change base-tag in index.html from / to BlazorApp1
       run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorApp1\/" \/>/g' release/wwwroot/index.html
@@ -33,3 +27,10 @@ jobs:
       
     - name: copy index.html to 404.html
       run: cp release/wwwroot/index.html release/wwwroot/404.html
+
+    - name: Uploading files to gh-pages branch
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        branch: gh-pages
+        folder: release/wwwroot
+
