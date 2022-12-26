@@ -1,0 +1,96 @@
+@page "/gfv-format"
+
+<h3>Расшифровка GFV</h3>
+
+<div class="mb-3">
+    <p>Идентификатор формы = G_F_V</p>
+    <p>G - идентификатор группы форм</p>
+    <p>F - идентификатор формата</p>
+    <p>V - идентификатор варианта формата</p>
+
+    <p>
+        Целочисленный идентификатор строится так {G}FFFVV. При этом для варианта используется строго 2 десятичных разряда, для формата 3 десятичных разряда, а для группы ограничений нет.
+    </p>
+</div>
+
+<div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="GFV" @bind="_inputColumn" />
+    <button class="btn btn-success" @onclick="DirectConvertGfv">Показать</button>
+</div>
+
+<div class="mb-3">
+    <p>
+        <span class="fw-bold">G:</span> @_group
+    </p>
+    <p>
+        <span class="fw-bold">F:</span> @_format
+    </p>
+    <p>
+        <span class="fw-bold">V:</span> @_variant
+    </p>
+</div>
+
+<div class="input-group mb-3">
+    <span class="input-group-text">G</span>
+    <input type="number" class="form-control" min="0" @bind="_inputG"/>
+    <span class="input-group-text">F</span>
+    <input type="number" class="form-control" min="0" @bind="_inputF"/>
+    <span class="input-group-text">V</span>
+    <input type="number" class="form-control" min="0" @bind="_inputV"/>
+    <button class="btn btn-success" @onclick="BackwardConvertGfv">Показать</button>
+</div>
+
+<div class="mb-3">
+    <p>
+        <span class="fw-bold">GFV:</span> @_gfv
+    </p>
+</div>
+
+@code {
+    private string? _inputColumn;
+    private string _group = "-";
+    private string _format = "-";
+    private string _variant = "-";
+
+    private int _inputG;
+    private int _inputF;
+    private int _inputV;
+
+    private string _gfv = "-";
+
+    private void DirectConvertGfv()
+    {
+        var result = InnerDirectConvertGfv(_inputColumn);
+
+        _group = result?.G.ToString() ?? "-";
+        _format = result?.F.ToString() ?? "-";
+        _variant = result?.V.ToString() ?? "-";
+    }
+
+    private void BackwardConvertGfv()
+    {
+        _gfv = InnerBackwardConvertGfv(_inputG, _inputF, _inputV);
+    }
+
+    private static string InnerBackwardConvertGfv(int g, int f, int v)
+    {
+        var result = g * 100000 + f * 100 + v;
+
+        return result == 0 ? "-" : result.ToString();
+    }
+
+    private static (int G, int F, int V)? InnerDirectConvertGfv(string? gfv)
+    {
+        if (string.IsNullOrEmpty(gfv))
+            return default;
+
+        if (!int.TryParse(gfv, out var result))
+            return default;
+
+        var v = result % 100;
+        var f = result / 100 % 1000;
+        var g = result / 100000;
+
+        return (g, f, v);
+    }
+}
