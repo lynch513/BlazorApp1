@@ -1,0 +1,57 @@
+@page "/date-time-converter"
+@using System.Globalization
+
+<h3>Конвертер даты/времени</h3>
+
+<div class="input-group mb-3">
+    <span class="input-group-text">Из строки:</span>
+    <input type="text" class="form-control" placeholder="Дата/время" @bind="_inputColumn"/>
+    <button class="btn btn-success" @onclick="ParseDateTimeFromString">Преобразовать</button>
+</div>
+
+<div class="input-group mb-3">
+    <span class="input-group-text">Из календаря:</span>
+    <input type="datetime-local" class="form-control" @bind="_inputDateTime"/>
+    <button class="btn btn-success" @onclick="ParseDateTimeFromPicker">Преобразовать</button>
+</div>
+
+<div class="mb-3">
+    <span class="fw-bold">Результаты:</span>
+    <table class="table table-bordered">
+        <tr>
+            <td>
+                По умолчанию
+            </td>
+            <td>
+                @_dateTime
+            </td>
+        </tr>
+        <tr>
+            <td>
+                ISO 8601
+            </td>
+            <td>
+                @_dateTime.ToString("O", CultureInfo.InvariantCulture)
+            </td>
+        </tr>
+    </table>
+</div>
+
+@code {
+    private string? _inputColumn;
+    private DateTime _inputDateTime;
+    private DateTime _dateTime;
+
+    private void ParseDateTimeFromString()
+    {
+        if (string.IsNullOrEmpty(_inputColumn))
+            return;
+
+        _dateTime = DateTime.Parse(_inputColumn, new CultureInfo("ru-RU", false));
+    }
+
+    private void ParseDateTimeFromPicker()
+    {
+        _dateTime = _inputDateTime;
+    }
+}
