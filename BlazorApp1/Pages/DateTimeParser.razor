@@ -18,29 +18,61 @@
 <div class="mb-3">
     <span class="fw-bold">Результаты:</span>
     <table class="table table-bordered">
+        <thead>
         <tr>
-            <td>
-                По умолчанию
-            </td>
-            <td>
-                @_dateTime
-            </td>
+            <td>Часовой пояс</td>
+            <td>По умолчанию</td>
+            <td>ISO 8601</td>
+            <td>UTC offset</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Локальное время</td>
+            <td>@_dateTime</td>
+            <td>@_dateTime.ToString("O", CultureInfo.InvariantCulture)</td>
+            <td>-</td>
         </tr>
         <tr>
-            <td>
-                ISO 8601
-            </td>
-            <td>
-                @_dateTime.ToString("O", CultureInfo.InvariantCulture)
-            </td>
+            <td>EKB</td>
+            <td>@TimeZoneInfo.ConvertTimeFromUtc(_dateTime.ToUniversalTime(), _ekb)</td>
+            <td>@TimeZoneInfo.ConvertTimeFromUtc(_dateTime.ToUniversalTime(), _ekb).ToString("O", CultureInfo.InvariantCulture)</td>
+            <td>@_ekb.BaseUtcOffset.ToString()</td>
         </tr>
+        <tr>
+            <td>MSK</td>
+            <td>@TimeZoneInfo.ConvertTimeFromUtc(_dateTime.ToUniversalTime(), _msk)</td>
+            <td>@TimeZoneInfo.ConvertTimeFromUtc(_dateTime.ToUniversalTime(), _msk).ToString("O", CultureInfo.InvariantCulture)</td>
+            <td>@_msk.BaseUtcOffset.ToString()</td>
+        </tr>
+        <tr>
+            <td>UTC</td>
+            <td>@_dateTime.ToUniversalTime()</td>
+            <td>@_dateTime.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture)</td>
+            <td>00:00:00</td>
+        </tr>
+        </tbody>
     </table>
+    @* @((MarkupString)_message) *@
 </div>
 
 @code {
     private string? _inputColumn;
     private DateTime _inputDateTime;
     private DateTime _dateTime;
+    private string _message = default!;
+    private TimeZoneInfo _msk = default!;
+    private TimeZoneInfo _ekb = default!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var timeZones = TimeZoneInfo.GetSystemTimeZones().Select(tz => $"StandardName: {tz.StandardName}, DisplayName: {tz.DisplayName}, TimeShift: {tz.BaseUtcOffset.ToString()}").ToList();
+        _message = string.Join("<br />", timeZones);
+        _msk = TimeZoneInfo.FindSystemTimeZoneById("Europe/Moscow");
+        _ekb = TimeZoneInfo.FindSystemTimeZoneById("Asia/Yekaterinburg");
+    }
 
     private void ParseDateTimeFromString()
     {
@@ -54,4 +86,5 @@
     {
         _dateTime = _inputDateTime;
     }
+
 }
