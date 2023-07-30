@@ -1,0 +1,33 @@
+﻿@page "/Timers"
+@using System.Timers
+<h3>Timers</h3>
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-subtitle text-muted">Count from zero</h5>
+        <h1 class="card-title">@_time</h1>
+        <a @onclick="() => { _timer.Enabled = true; }" class="btn btn-primary">Start</a>
+        <a @onclick="() => { _timer.Enabled = false; }" class="btn btn-secondary">Stop</a>
+        <a @onclick="() => { _time = new TimeSpan(); }" class="btn btn-danger">Reset</a>
+    </div>
+</div>
+
+@code {
+    private TimeSpan _time;
+    private readonly System.Timers.Timer _timer = new(1000);
+
+    protected override Task OnInitializedAsync()
+    {
+        _timer.Elapsed += CountTimerEvent;
+        _timer.Enabled = false;
+
+        return base.OnInitializedAsync();
+    }
+
+    private void CountTimerEvent(object? sender, ElapsedEventArgs e)
+    {
+        _time += TimeSpan.FromMilliseconds(1000);
+        InvokeAsync(StateHasChanged);
+    }
+
+}
