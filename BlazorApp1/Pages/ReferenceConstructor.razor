@@ -1,0 +1,19 @@
+﻿@page "/ref-constructor"
+@using BlazorApp1.Components
+
+<div class="row mt-3">
+    <div class="col-sm"><h2>Ссылка на коммит в gitlab:</h2></div>
+</div>
+<div class="row mt-1">
+    <div class="col-sm-6">
+        <ReferenceBuilder Placeholder="https://git.skbkontur.ru/forms/forms/-/commit/{0}"></ReferenceBuilder>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-sm"><h2>Ссылка на файл в ветке master:</h2></div>
+</div>
+<div class="row mt-1">
+    <div class="col-sm-6">
+        <ReferenceBuilder Placeholder="https://git.skbkontur.ru/forms/forms/-/blob/master/{0}"></ReferenceBuilder>
+    </div>
+</div>

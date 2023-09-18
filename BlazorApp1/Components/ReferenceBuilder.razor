@@ -1,0 +1,42 @@
+﻿@using System.Reflection.Metadata
+@using BlazorApp1.Helpers
+
+<div class="row mb-2">
+    <label class="col-sm-2 col-form-label">Placeholder</label>
+    <div class="col-sm">
+        <input type="text" class="form-control" placeholder="Enter placeholder with {0}" @bind="Placeholder">
+    </div>
+</div>
+<div class="row mb-2">
+    <label class="col-sm-2 col-form-label">Value</label>
+    <div class="col-sm">
+        <input type="text" class="form-control" placeholder="Enter value" @bind="Value">
+    </div>
+</div>
+<hr/>
+<div class="row mb-2">
+    <label class="col-sm-2 col-form-label">Result</label>
+    <div class="col-sm">
+        <input type="text" class="form-control" value="@Result" disabled/>
+    </div>
+</div>
+<div class="row mb-2">
+    <div class="col-sm-2"></div>
+    <div class="col-sm">
+        <p class="text-end">
+            <a class="small" href="@Result">@Result</a>
+        </p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    private string? Result => Placeholder is null || Value is null ?
+        default : string.Format(Placeholder, Value.ConvertPathSeparator().ConvertColonToGrid());
+
+}
