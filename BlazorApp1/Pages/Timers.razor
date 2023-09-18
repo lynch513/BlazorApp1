@@ -2,6 +2,8 @@
 @using System.Timers
 <h3>Timers</h3>
 
+<div class="alert alert-danger">Этот таймер ловит фризы если вкладка в браузере не активна</div>
+
 <div class="card" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-subtitle text-muted">Count from zero</h5>
@@ -11,6 +13,8 @@
         <a @onclick="() => { _time = new TimeSpan(); }" class="btn btn-danger">Reset</a>
     </div>
 </div>
+
+<PageTitle>@_time</PageTitle>
 
 @code {
     private TimeSpan _time;
